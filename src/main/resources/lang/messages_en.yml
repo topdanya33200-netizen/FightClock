@@ -1,0 +1,59 @@
+# FightClock messages (English). MiniMessage format: https://docs.advntr.dev/minimessage/format
+# Set a message to "" to turn it off. Missing keys fall back to the built-in text.
+#
+# Placeholders: <prefix>, <enemy> (last player you fought), <time> (time left, e.g. 12s),
+# <seconds>, <player>, <command>, <count>
+
+prefix: "<dark_gray>[<gradient:#ff416c:#ff9b44>FightClock</gradient>]</dark_gray> "
+
+time:
+  days: "d"
+  hours: "h"
+  minutes: "m"
+  seconds: "s"
+
+combat:
+  started: "<prefix><red>You are in a fight with <white><enemy></white>!</red> <gray>Logging out now kills you. Wait <white><time></white>.</gray>"
+  started-no-enemy: "<prefix><red>You are in a fight!</red> <gray>Logging out now kills you. Wait <white><time></white>.</gray>"
+  ended: "<prefix><green>You are no longer in a fight. You can log out safely.</green>"
+
+hud:
+  bossbar: "<red>⚔ Fight with <white><enemy></white></red> <dark_gray>·</dark_gray> <white><time></white>"
+  bossbar-no-enemy: "<red>⚔ In a fight</red> <dark_gray>·</dark_gray> <white><time></white>"
+  actionbar: "<red>⚔ In a fight: <white><time></white></red> <gray>· don't log out</gray>"
+
+restrictions:
+  command: "<prefix><red>You can't use <white><command></white> during a fight.</red> <gray>Wait <white><time></white>.</gray>"
+  teleport: "<prefix><red>You can't teleport during a fight.</red> <gray>Wait <white><time></white>.</gray>"
+  portal: "<prefix><red>Portals don't work for you during a fight.</red> <gray>Wait <white><time></white>.</gray>"
+  elytra: "<prefix><red>Elytra don't open during a fight.</red>"
+  flight: "<prefix><red>Flight is off during a fight.</red>"
+
+logout:
+  death-message: "<red><player> left a fight with <enemy> and was killed.</red>"
+  death-message-no-enemy: "<red><player> left a fight and was killed.</red>"
+  notice: "<prefix><red>You were killed because you left a fight with <white><enemy></white>.</red>"
+  notice-no-enemy: "<prefix><red>You were killed because you left a fight.</red>"
+
+status:
+  self-in: "<prefix><red>You are in a fight with <white><enemy></white>.</red> <gray>Wait <white><time></white> before logging out.</gray>"
+  self-in-no-enemy: "<prefix><red>You are in a fight.</red> <gray>Wait <white><time></white> before logging out.</gray>"
+  self-out: "<prefix><green>You are not in a fight. You can log out safely.</green>"
+  other-in: "<prefix><white><player></white> is in a fight with <white><enemy></white>, <white><time></white> left."
+  other-in-no-enemy: "<prefix><white><player></white> is in a fight, <white><time></white> left."
+  other-out: "<prefix><white><player></white> is not in a fight."
+  list-header: "<prefix>Players in a fight (<count>):"
+  list-entry: "<gray> - <white><player></white> vs <white><enemy></white>, <time> left"
+  list-entry-no-enemy: "<gray> - <white><player></white>, <time> left"
+  list-empty: "<prefix>Nobody is in a fight right now."
+
+admin:
+  tagged: "<prefix><white><player></white> is now in a fight for <white><time></white>."
+  untagged: "<prefix><white><player></white> is no longer in a fight."
+  not-online: "<prefix><red><player> is not online.</red>"
+  console-usage: "<prefix><gray>From the console use <white>/combat status \\<player></white> or <white>/combat list</white>."
+  reloaded: "<prefix><green>Configuration and messages reloaded.</green>"
+
+# %fightclock_time_left% and %fightclock_enemy% when the player is not in a fight
+placeholder:
+  none: "-"

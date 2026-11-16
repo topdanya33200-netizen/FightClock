@@ -1,0 +1,25 @@
+name: FightClock
+version: '${version}'
+main: io.github.topdanya33200_netizen.fightclock.FightClockPlugin
+api-version: '26.1'
+description: Combat log protection with a fight timer, blocked commands and death for leaving a fight.
+author: topdanya33200-netizen
+website: https://github.com/topdanya33200-netizen/FightClock
+folia-supported: true
+softdepend: [PlaceholderAPI]
+
+permissions:
+  fightclock.status:
+    description: Use /combat to see your own fight timer
+    default: true
+  fightclock.admin:
+    description: Check, start and end fights of other players and reload the plugin
+    default: op
+    children:
+      fightclock.status: true
+  fightclock.bypass:
+    description: Never enter a fight
+    default: false
+  fightclock.bypass.commands:
+    description: Use blocked commands during a fight
+    default: false

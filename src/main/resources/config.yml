@@ -1,0 +1,102 @@
+# FightClock configuration. Run /combat reload after editing.
+
+# Language file from plugins/FightClock/lang/: en or ru. You can add your own messages_<code>.yml.
+language: en
+
+combat:
+  # How long a fight lasts after the last hit, in seconds. Every new hit starts the countdown again.
+  duration-seconds: 15
+  # Which hits start a fight. Only damage caused by another player counts.
+  triggers:
+    # sword, axe or fist
+    melee: true
+    # arrows, tridents, snowballs, wind charges, fireworks from a crossbow
+    projectiles: true
+    # end crystals and TNT set off by a player
+    explosions: true
+    # splash and lingering potions
+    potions: true
+  # Who enters the fight: the player who was hit and the player who hit
+  tag-victim: true
+  tag-attacker: true
+  # Players in creative or spectator mode never enter a fight
+  ignore-creative: true
+  # Worlds where fights are not tracked
+  disabled-worlds: []
+  # Dying ends your fight. The player who killed you stays in the fight until the timer runs out.
+  end-on-death: true
+
+display:
+  bossbar:
+    enabled: true
+    # PINK, BLUE, RED, GREEN, YELLOW, PURPLE or WHITE
+    color: RED
+    # PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12 or NOTCHED_20
+    overlay: PROGRESS
+  # Countdown above the hotbar
+  actionbar: true
+  # Chat messages when a fight starts and ends
+  chat: true
+
+commands:
+  # blacklist: the commands below are blocked during a fight
+  # whitelist: only the commands below work during a fight (/combat always works)
+  mode: blacklist
+  # Aliases and prefixed forms such as /essentials:home are recognised automatically
+  list:
+    - spawn
+    - home
+    - homes
+    - sethome
+    - warp
+    - warps
+    - back
+    - tpa
+    - tpahere
+    - tpaccept
+    - tpyes
+    - rtp
+    - wild
+    - ec
+    - enderchest
+    - kit
+    - kits
+    - hub
+    - lobby
+
+restrictions:
+  # Teleport causes that are blocked during a fight. Ender pearls and chorus fruit keep working.
+  # Other causes: PLUGIN, SPECTATE, DISMOUNT, EXIT_BED, UNKNOWN
+  blocked-teleports:
+    - COMMAND
+    - NETHER_PORTAL
+    - END_PORTAL
+    - END_GATEWAY
+  # Elytra can't be opened during a fight
+  block-elytra: true
+  # /fly and similar flight is switched off during a fight
+  disable-flight: true
+  # Longer cooldowns for items used during a fight, in seconds
+  item-cooldowns:
+    ENDER_PEARL: 15
+    CHORUS_FRUIT: 10
+    ENCHANTED_GOLDEN_APPLE: 60
+
+logout:
+  # Kill players who leave during a fight. Their items drop and the kill counts for their last enemy.
+  kill: true
+  # Replace the death message with "<player> left a fight with <enemy> and was killed"
+  announce: true
+  # Kicks with these causes are not punished: an admin's /kick, bans, a restart, the whitelist.
+  # Every other kick is, so a cheat can't kick itself out of a fight with a bad packet.
+  safe-kick-causes:
+    - KICKED
+    - BANNED
+    - IP_BANNED
+    - WHITELIST
+    - RESTART_COMMAND
+  # Console commands run after the punishment. {player} and {enemy} are replaced with names.
+  commands: []
+
+# Register %fightclock_...% placeholders when PlaceholderAPI is installed
+placeholderapi: true

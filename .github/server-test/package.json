@@ -1,0 +1,9 @@
+{
+  "name": "fightclock-server-test",
+  "private": true,
+  "description": "End-to-end test of FightClock with bot players fighting on a real Paper server",
+  "type": "module",
+  "dependencies": {
+    "mineflayer": "^4.39.0"
+  }
+}

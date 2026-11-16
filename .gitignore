@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Test server created by ./gradlew runServer
+run/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+out/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Server test dependencies
+.github/server-test/node_modules/
+.github/server-test/package-lock.json
+.github/server-test/__pycache__/

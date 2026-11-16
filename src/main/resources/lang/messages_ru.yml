@@ -1,0 +1,59 @@
+# Сообщения FightClock (русский). Формат MiniMessage: https://docs.advntr.dev/minimessage/format
+# Чтобы отключить сообщение, оставьте "". Если ключа нет, берётся встроенный текст.
+#
+# Плейсхолдеры: <prefix>, <enemy> (последний противник), <time> (сколько осталось, например 12с),
+# <seconds>, <player>, <command>, <count>
+
+prefix: "<dark_gray>[<gradient:#ff416c:#ff9b44>FightClock</gradient>]</dark_gray> "
+
+time:
+  days: "д"
+  hours: "ч"
+  minutes: "м"
+  seconds: "с"
+
+combat:
+  started: "<prefix><red>Вы в бою с <white><enemy></white>!</red> <gray>Выход сейчас — смерть. Подождите <white><time></white>.</gray>"
+  started-no-enemy: "<prefix><red>Вы в бою!</red> <gray>Выход сейчас — смерть. Подождите <white><time></white>.</gray>"
+  ended: "<prefix><green>Бой окончен, теперь можно выходить.</green>"
+
+hud:
+  bossbar: "<red>⚔ Бой с <white><enemy></white></red> <dark_gray>·</dark_gray> <white><time></white>"
+  bossbar-no-enemy: "<red>⚔ Режим боя</red> <dark_gray>·</dark_gray> <white><time></white>"
+  actionbar: "<red>⚔ В бою: <white><time></white></red> <gray>· не выходите</gray>"
+
+restrictions:
+  command: "<prefix><red>Команда <white><command></white> недоступна в бою.</red> <gray>Подождите <white><time></white>.</gray>"
+  teleport: "<prefix><red>В бою телепортироваться нельзя.</red> <gray>Подождите <white><time></white>.</gray>"
+  portal: "<prefix><red>В бою порталы для вас закрыты.</red> <gray>Подождите <white><time></white>.</gray>"
+  elytra: "<prefix><red>В бою элитры не раскрываются.</red>"
+  flight: "<prefix><red>В бою полёт отключён.</red>"
+
+logout:
+  death-message: "<red><player> вышел из боя с <enemy> и погиб.</red>"
+  death-message-no-enemy: "<red><player> вышел во время боя и погиб.</red>"
+  notice: "<prefix><red>Вы погибли, потому что вышли из боя с <white><enemy></white>.</red>"
+  notice-no-enemy: "<prefix><red>Вы погибли, потому что вышли во время боя.</red>"
+
+status:
+  self-in: "<prefix><red>Вы в бою с <white><enemy></white>.</red> <gray>До выхода подождите <white><time></white>.</gray>"
+  self-in-no-enemy: "<prefix><red>Вы в бою.</red> <gray>До выхода подождите <white><time></white>.</gray>"
+  self-out: "<prefix><green>Вы не в бою, можно выходить.</green>"
+  other-in: "<prefix><white><player></white> в бою с <white><enemy></white>, осталось <white><time></white>."
+  other-in-no-enemy: "<prefix><white><player></white> в бою, осталось <white><time></white>."
+  other-out: "<prefix><white><player></white> не в бою."
+  list-header: "<prefix>Игроки в бою (<count>):"
+  list-entry: "<gray> - <white><player></white> против <white><enemy></white>, осталось <time>"
+  list-entry-no-enemy: "<gray> - <white><player></white>, осталось <time>"
+  list-empty: "<prefix>Сейчас никто не в бою."
+
+admin:
+  tagged: "<prefix><white><player></white> теперь в бою на <white><time></white>."
+  untagged: "<prefix><white><player></white> больше не в бою."
+  not-online: "<prefix><red><player> не в сети.</red>"
+  console-usage: "<prefix><gray>В консоли используйте <white>/combat status \\<игрок></white> или <white>/combat list</white>."
+  reloaded: "<prefix><green>Настройки и сообщения перезагружены.</green>"
+
+# %fightclock_time_left% и %fightclock_enemy%, когда игрок не в бою
+placeholder:
+  none: "-"
