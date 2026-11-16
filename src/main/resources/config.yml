@@ -66,6 +66,7 @@ commands:
 
 restrictions:
   # Teleport causes that are blocked during a fight. Ender pearls and chorus fruit keep working.
+  # COMMAND covers an admin's /tp too: use /combat untag first to move a player who is fighting.
   # Other causes: PLUGIN, SPECTATE, DISMOUNT, EXIT_BED, UNKNOWN
   blocked-teleports:
     - COMMAND
