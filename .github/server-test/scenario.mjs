@@ -60,7 +60,7 @@ function joinBot (username) {
     }
     bot.received = []
     bot.actionBars = []
-    bot.bossBars = new Map()
+    bot.bars = new Map() // mineflayer already has bot.bossBars
     bot.cooldowns = []
     bot.on('messagestr', (message, position) => {
       if (position === 'game_info') return // action bar, recorded below
@@ -68,10 +68,10 @@ function joinBot (username) {
       console.log(`      [${username} sees] ${message.replace(/\n/g, ' | ')}`)
     })
     bot.on('actionBar', (message) => bot.actionBars.push(message.toString()))
-    const showBar = (bar) => bot.bossBars.set(bar.entityUUID, bar.title.toString())
+    const showBar = (bar) => bot.bars.set(bar.entityUUID, bar.title.toString())
     bot.on('bossBarCreated', showBar)
     bot.on('bossBarUpdated', showBar)
-    bot.on('bossBarDeleted', (bar) => bot.bossBars.delete(bar.entityUUID))
+    bot.on('bossBarDeleted', (bar) => bot.bars.delete(bar.entityUUID))
     bot._client.on('set_cooldown', (packet) => bot.cooldowns.push(packet))
     const timer = setTimeout(() => reject(new Error(`${username} did not spawn in time`)), 60000)
     bot.once('spawn', () => {
@@ -101,6 +101,17 @@ function hit (attacker, victimName) {
   attacker.attack(target)
 }
 
+/**
+ * Players spawn at random spots around the world spawn, often too far apart to hit each other,
+ * so Steve is teleported to Alex before a fight.
+ */
+async function together (alex, steve) {
+  check('console: bring Steve to Alex', await consoleCommand('tp Steve Alex', /Teleported Steve to Alex/))
+  await sleep(500)
+  const distance = alex.entity.position.distanceTo(alex.players.Steve?.entity?.position ?? alex.entity.position)
+  console.log(`      [distance] Alex and Steve are ${distance.toFixed(2)} blocks apart`)
+}
+
 async function main () {
   check('plugin enabled with the test config',
     new RegExp(`\\[FightClock\\] Fights last ${FIGHT_SECONDS}s`).test(readLog()))
@@ -108,6 +119,7 @@ async function main () {
 
   const alex = await joinBot('Alex')
   let steve = await joinBot('Steve')
+  await together(alex, steve)
   await sleep(SPAWN_PROTECTION_MS)
 
   // --- a fight starts
@@ -117,10 +129,11 @@ async function main () {
   mark(alex); mark(steve)
   hit(alex, 'Steve')
   check('fight: the player who was hit enters the fight', await received(steve, /You are in a fight with Alex!/))
+  console.log(`      [health] Steve has ${steve.health} health after the hit`)
   check('fight: the attacker enters the fight', await received(alex, /You are in a fight with Steve!/))
   check('hud: bossbar names the enemy and counts down',
-    await waitFor(() => [...steve.bossBars.values()].find((title) => /Fight with Alex · \d+s/.test(title))),
-    [...steve.bossBars.values()].join(' / '))
+    await waitFor(() => [...steve.bars.values()].find((title) => /Fight with Alex · \d+s/.test(title))),
+    [...steve.bars.values()].join(' / '))
   check('hud: action bar countdown', await waitFor(() => steve.actionBars.find((text) => /In a fight: \d+s/.test(text))))
 
   steve.chat('/combat')
@@ -146,7 +159,7 @@ async function main () {
   // --- the fight runs out
   check('fight: ends when the countdown runs out', await received(steve, /You are no longer in a fight/, (FIGHT_SECONDS + 5) * 1000))
   check('fight: ends for the attacker too', await received(alex, /You are no longer in a fight/, 5000))
-  check('hud: bossbar removed', await waitFor(() => steve.bossBars.size === 0, 3000))
+  check('hud: bossbar removed', await waitFor(() => steve.bars.size === 0, 3000))
   mark(alex)
   steve.chat('/me is free')
   check('restriction: commands work again after the fight', await received(alex, /\* Steve is free/))
@@ -176,6 +189,7 @@ async function main () {
 
   steve = await joinBot('Steve')
   check('logout: told why they died when they come back', await received(steve, /You were killed because you left a fight with Alex\./))
+  await together(alex, steve)
   await sleep(SPAWN_PROTECTION_MS)
 
   // --- an admin's kick is excused
@@ -189,6 +203,7 @@ async function main () {
   check('kick: no death message', !/Steve left a fight/.test(readLog(from)))
   steve = await joinBot('Steve')
   check('kick: no notice after an excused kick', await notReceived(steve, /You were killed/, 2500))
+  await together(alex, steve)
 
   // --- item cooldowns during a fight
   check('console: give ender pearls', await consoleCommand('give Steve ender_pearl 4', /Gave 4 \[Ender Pearl\] to Steve/))
