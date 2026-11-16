@@ -7,6 +7,7 @@
 import fs from 'node:fs'
 import { setTimeout as sleep } from 'node:timers/promises'
 import mineflayer from 'mineflayer'
+import nbt from 'prismarine-nbt'
 
 const SERVER_LOG = process.env.SERVER_LOG
 const CONSOLE_IN = process.env.CONSOLE_IN
@@ -67,6 +68,8 @@ function joinBot (username) {
       bot.received.push(message)
       console.log(`      [${username} sees] ${message.replace(/\n/g, ' | ')}`)
     })
+    // Paper sends the action bar with its own packet, which mineflayer doesn't turn into an event
+    bot._client.on('action_bar', (packet) => bot.actionBars.push(plainText(packet.text)))
     bot.on('actionBar', (message) => bot.actionBars.push(message.toString()))
     const showBar = (bar) => bot.bars.set(bar.entityUUID, bar.title.toString())
     bot.on('bossBarCreated', showBar)
@@ -84,6 +87,27 @@ function joinBot (username) {
     bot.once('kicked', (reason) => reject(new Error(`${username} was kicked: ${JSON.stringify(reason)}`)))
     bot.once('error', reject)
   })
+}
+
+/** Plain text of a chat component sent as NBT, e.g. in the action bar packet. */
+function plainText (component) {
+  const value = component && typeof component === 'object' && typeof component.type === 'string'
+    ? nbt.simplify(component)
+    : component
+  const parts = []
+  const walk = (node) => {
+    if (typeof node === 'string') {
+      parts.push(node)
+    } else if (Array.isArray(node)) {
+      node.forEach(walk)
+    } else if (node && typeof node === 'object') {
+      if (typeof node.text === 'string') parts.push(node.text)
+      if (typeof node[''] === 'string') parts.push(node[''])
+      if (node.extra) walk(node.extra)
+    }
+  }
+  walk(value)
+  return parts.join('')
 }
 
 /** Only messages after the last mark() count, so repeated phases don't match old messages. */
@@ -134,7 +158,8 @@ async function main () {
   check('hud: bossbar names the enemy and counts down',
     await waitFor(() => [...steve.bars.values()].find((title) => /Fight with Alex · \d+s/.test(title))),
     [...steve.bars.values()].join(' / '))
-  check('hud: action bar countdown', await waitFor(() => steve.actionBars.find((text) => /In a fight: \d+s/.test(text))))
+  check('hud: action bar countdown', await waitFor(() => steve.actionBars.find((text) => /In a fight: \d+s/.test(text)), 3000),
+    steve.actionBars.slice(-3).join(' / '))
 
   steve.chat('/combat')
   check('player: /combat shows the enemy and the time left', await received(steve, /You are in a fight with Alex\. Wait \d+s before logging out/))

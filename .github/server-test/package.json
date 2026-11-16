@@ -4,6 +4,7 @@
   "description": "End-to-end test of FightClock with bot players fighting on a real Paper server",
   "type": "module",
   "dependencies": {
-    "mineflayer": "^4.39.0"
+    "mineflayer": "^4.39.0",
+    "prismarine-nbt": "^2.8.0"
   }
 }
